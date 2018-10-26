@@ -63,8 +63,7 @@ var createCmd = &cobra.Command{
 			if shouldEnd(ingredientQuantity) {
 				break
 			}
-
-			fmt.Printf("Need %s of %s\n", ingredientQuantity, ingredientName)
+			recipe.addIngredient(ingredientName, ingredientQuantity)
 		}
 		fmt.Printf("Please enter cooking instructions for %s\n", recipeName)
 		fmt.Println("Type end or finished in a newline to finish")
