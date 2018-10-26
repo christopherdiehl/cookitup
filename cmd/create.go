@@ -37,7 +37,7 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("An error occured while reading in the user input")
 		}
-		fmt.Printf("Awesome! I always wanted to cookup %s", text)
+		fmt.Printf("Awesome! I always wanted to Cook%sUp", text)
 		fmt.Println("Please enter your ingredients. Enter finished or end to stop accepting ingredients")
 		for {
 			ingredientName, err := PromptSTDIN(reader, "What is the name of the ingredient?")
