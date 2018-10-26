@@ -15,3 +15,7 @@ func PromptSTDIN(reader *bufio.Reader, message string) (userInput string, err er
 	userInput = strings.Replace(userInput, "\n", "", -1)
 	return
 }
+
+func ShouldTerminate(message string) bool {
+	return message == "end" || message == "finished"
+}

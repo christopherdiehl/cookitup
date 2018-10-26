@@ -22,6 +22,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func shouldEnd(message string) bool {
+	return message == "end" || message == "finished"
+}
+
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
@@ -33,7 +37,25 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("An error occured while reading in the user input")
 		}
-		fmt.Println(text)
+		fmt.Printf("Awesome! I always wanted to cookup %s", text)
+		fmt.Println("Please enter your ingredients. Enter finished or end to stop accepting ingredients")
+		for {
+			ingredientName, err := PromptSTDIN(reader, "What is the name of the ingredient?")
+			if err != nil {
+				fmt.Println("An error occured while reading in the user input")
+			}
+			if shouldEnd(ingredientName) {
+				break
+			}
+			ingredientQuantity, err := PromptSTDIN(reader, "How many do you need?")
+			if err != nil {
+				fmt.Println("An error occured while reading in the user input")
+			}
+			if shouldEnd(ingredientQuantity) {
+				break
+			}
+			fmt.Printf("Need %s of %s\n", ingredientQuantity, ingredientName)
+		}
 	},
 }
 
