@@ -18,6 +18,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -33,11 +35,18 @@ var createCmd = &cobra.Command{
 	Long:  `Create a recipe that is stored in a json file at ~/.cookitup/storage.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		reader := bufio.NewReader(os.Stdin)
-		text, err := PromptSTDIN(reader, "Enter recipe name")
+		recipe := Recipe{
+			name:         "",
+			dateCreated:  time.Now().String(),
+			instructions: "",
+			timesCooked:  0,
+			ingredients:  nil,
+		}
+		recipeName, err := PromptSTDIN(reader, "Enter recipe name")
 		if err != nil {
 			fmt.Println("An error occured while reading in the user input")
 		}
-		fmt.Printf("Awesome! I always wanted to Cook%sUp", text)
+		fmt.Printf("Awesome! I always wanted to Cook%sUp", recipeName)
 		fmt.Println("Please enter your ingredients. Enter finished or end to stop accepting ingredients")
 		for {
 			ingredientName, err := PromptSTDIN(reader, "What is the name of the ingredient?")
@@ -54,8 +63,26 @@ var createCmd = &cobra.Command{
 			if shouldEnd(ingredientQuantity) {
 				break
 			}
+
 			fmt.Printf("Need %s of %s\n", ingredientQuantity, ingredientName)
 		}
+		fmt.Printf("Please enter cooking instructions for %s\n", recipeName)
+		fmt.Println("Type end or finished in a newline to finish")
+		instructions := ""
+		for {
+			instructionLine, err := reader.ReadString('\n')
+			if err != nil {
+				fmt.Println("An error occured while reading in the user input")
+			}
+			if shouldEnd(strings.Replace(instructionLine, "\n", "", -1)) {
+				break
+			}
+			// need to work on optimizing here
+			instructions = instructions + instructionLine
+		}
+		_ = recipe
+		fmt.Println(instructions)
+		fmt.Println("So you want to cook a recipe with ")
 	},
 }
 
