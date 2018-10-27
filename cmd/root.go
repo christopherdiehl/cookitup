@@ -48,7 +48,12 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
+	// Create the $HOME/.cookitup/storage/ directory where everything wil e stored
+	err := os.MkdirAll(".cookitup/storage/", OS_USER_RWX)
+	if err != nil {
+		fmt.Println("Unable to create storage location for cooking")
+		fmt.Println(err.Error())
+	}
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.

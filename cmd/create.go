@@ -29,10 +29,6 @@ func shouldEnd(message string) bool {
 	return message == "end" || message == "finished"
 }
 
-const (
-	USER_READ = 644
-)
-
 // No generics :(
 // Handles filename
 func saveRecipeToFile(recipe *Recipe) {
@@ -41,7 +37,7 @@ func saveRecipeToFile(recipe *Recipe) {
 		fmt.Println(err.Error())
 	}
 	fileName := "~./cookitup/storage/" + recipe.Name
-	err = ioutil.WriteFile(fileName, r, USER_READ)
+	err = ioutil.WriteFile(fileName, r, 0644)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
