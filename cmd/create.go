@@ -22,6 +22,7 @@ import (
 	"os"
 	"strings"
 
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
@@ -36,8 +37,13 @@ func saveRecipeToFile(recipe *Recipe) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fileName := "~./cookitup/storage/" + recipe.Name
-	err = ioutil.WriteFile(fileName, r, 0644)
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fileName := home + "/.cookitup/storage/" + recipe.Name
+	err = ioutil.WriteFile(fileName, r, OS_USER_RWX)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
