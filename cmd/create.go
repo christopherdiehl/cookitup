@@ -40,7 +40,7 @@ func saveRecipeToFile(recipe *Recipe) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fileName := "~./cookitup/storage" + recipe.Name
+	fileName := "~./cookitup/storage/" + recipe.Name
 	err = ioutil.WriteFile(fileName, r, USER_READ)
 	if err != nil {
 		fmt.Println(err.Error())
