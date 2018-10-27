@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -72,8 +73,8 @@ var createCmd = &cobra.Command{
 			// need to work on optimizing here
 			instructions = instructions + instructionLine
 		}
-		recipe.instructions = instructions
-		fmt.Println(instructions)
+		recipe.Instructions = instructions
+		fmt.Println(json.Marshal(recipe))
 		fmt.Println("So you want to cook a recipe with ")
 	},
 }
