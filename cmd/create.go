@@ -74,7 +74,8 @@ var createCmd = &cobra.Command{
 			instructions = instructions + instructionLine
 		}
 		recipe.Instructions = instructions
-		fmt.Println(json.Marshal(recipe))
+		rec, err := json.Marshal(recipe)
+		fmt.Println(string(rec))
 		fmt.Println("So you want to cook a recipe with ")
 	},
 }

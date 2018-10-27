@@ -12,8 +12,8 @@ type Recipe struct {
 	Ingredients  []ingredient `json:"ingredients"`
 }
 type ingredient struct {
-	Name     string
-	Quantity string
+	Name     string `json:"name"`
+	Quantity string `json:"quantity"`
 }
 
 /*
