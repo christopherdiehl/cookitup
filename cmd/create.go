@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -26,6 +27,24 @@ import (
 
 func shouldEnd(message string) bool {
 	return message == "end" || message == "finished"
+}
+
+const (
+	USER_READ = 644
+)
+
+// No generics :(
+// Handles filename
+func saveRecipeToFile(recipe *Recipe) {
+	r, err := json.Marshal(recipe)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fileName := "~./cookitup/storage" + recipe.Name
+	err = ioutil.WriteFile(fileName, r, USER_READ)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
 // createCmd represents the create command
@@ -74,9 +93,9 @@ var createCmd = &cobra.Command{
 			instructions = instructions + instructionLine
 		}
 		recipe.Instructions = instructions
-		rec, err := json.Marshal(recipe)
-		fmt.Println(string(rec))
-		fmt.Println("So you want to cook a recipe with ")
+		fmt.Println("Saving Recipe Now")
+		saveRecipeToFile(recipe)
+		fmt.Println("Recipe Saved")
 	},
 }
 
