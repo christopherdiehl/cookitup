@@ -18,23 +18,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"os"
-	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
-func generateRandomNumbers(numbersToGenerate int, upperBound int) []int {
-	s1 := rand.NewSource(time.Now().UnixNano())
-	r1 := rand.New(s1)
-	var retVals []int
-	for i := 1; i <= numbersToGenerate; i++ {
-		retVals = append(retVals, r1.Intn(upperBound))
-	}
-	return retVals
-}
 func getRecipesFromFiles(numRecipes int) []Recipe {
 	home, err := homedir.Dir()
 	if err != nil {
@@ -52,6 +41,7 @@ func getRecipesFromFiles(numRecipes int) []Recipe {
 			fileNames = append(fileNames, f.Name())
 		}
 	}
+	recipeIndices := GenerateUniqueRandomNumbers(numRecipes, len(fileNames))
 
 	// for _, f := range chosenFiles {
 	// 	var recipe Recipe
