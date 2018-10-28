@@ -15,17 +15,27 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
-func getRecipesFromFiles() []Recipe {
+func generateRandomNumbers(numbersToGenerate int, upperBound int) []int {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	var retVals []int
+	for i := 1; i <= numbersToGenerate; i++ {
+		retVals = append(retVals, r1.Intn(upperBound))
+	}
+	return retVals
+}
+func getRecipesFromFiles(numRecipes int) []Recipe {
 	home, err := homedir.Dir()
 	if err != nil {
 		fmt.Println(err)
@@ -36,23 +46,28 @@ func getRecipesFromFiles() []Recipe {
 		log.Fatal(err)
 	}
 	var recipes []Recipe
+	var fileNames []string
 	for _, f := range files {
 		if !f.IsDir() {
-			var recipe Recipe
-			fmt.Println(f.Name())
-			jsonFile, err := os.Open(home + "/.cookitup/storage/" + f.Name())
-			if err != nil {
-				fmt.Println(err)
-			}
-			defer jsonFile.Close()
-			byteValue, err := ioutil.ReadAll(jsonFile)
-			if err != nil {
-				fmt.Println(err)
-			}
-			json.Unmarshal(byteValue, &recipe)
-			recipes = append(recipes, recipe)
+			fileNames = append(fileNames, f.Name())
 		}
 	}
+
+	// for _, f := range chosenFiles {
+	// 	var recipe Recipe
+	// 	fmt.Println(f.Name())
+	// 	jsonFile, err := os.Open(home + "/.cookitup/storage/" + f.Name())
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	defer jsonFile.Close()
+	// 	byteValue, err := ioutil.ReadAll(jsonFile)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	json.Unmarshal(byteValue, &recipe)
+	// 	recipes = append(recipes, recipe)
+	// }
 	return recipes
 }
 
