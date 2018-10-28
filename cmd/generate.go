@@ -15,10 +15,46 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
+
+func getRecipesFromFiles() []Recipe {
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	files, err := ioutil.ReadDir(home + "/.cookitup/storage/")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var recipes []Recipe
+	for _, f := range files {
+		if !f.IsDir() {
+			var recipe Recipe
+			fmt.Println(f.Name())
+			jsonFile, err := os.Open(home + "/.cookitup/storage/" + f.Name())
+			if err != nil {
+				fmt.Println(err)
+			}
+			defer jsonFile.Close()
+			byteValue, err := ioutil.ReadAll(jsonFile)
+			if err != nil {
+				fmt.Println(err)
+			}
+			json.Unmarshal(byteValue, &recipe)
+			recipes = append(recipes, recipe)
+		}
+	}
+	return recipes
+}
 
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
@@ -26,7 +62,9 @@ var generateCmd = &cobra.Command{
 	Short: "Generate your mealplan - default is 5 meals. Recieve a text at your specified number",
 	Long:  `Generate your mealplan. Default to five meals.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		getRecipesFromFiles()
 		fmt.Println("generate called")
+
 	},
 }
 
