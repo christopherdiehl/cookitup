@@ -34,6 +34,7 @@ func GenerateUniqueRandomNumbers(numbersToGenerate int, upperBound int) []int {
 	}
 	return retVals
 }
+
 func PromptSTDIN(reader *bufio.Reader, message string) (userInput string, err error) {
 	fmt.Println(message)
 	userInput, err = reader.ReadString('\n')

@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
 	"time"
 )
 
@@ -41,4 +45,22 @@ func (r *Recipe) addIngredient(name string, quantity string) error {
 	}
 	r.Ingredients = append(r.Ingredients, ingredient)
 	return nil
+}
+
+func ReadRecipeFromJSONFile(filename string) (*Recipe, error) {
+	var recipe Recipe
+	jsonFile, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer jsonFile.Close()
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	fmt.Println(byteValue)
+	err = json.Unmarshal(byteValue, &recipe)
+	return &recipe, err
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func getRecipesFromFiles(numRecipes int) []Recipe {
+func getRecipesFromFiles(numRecipes int) []*Recipe {
 	home, err := homedir.Dir()
 	if err != nil {
 		fmt.Println(err)
@@ -34,30 +34,27 @@ func getRecipesFromFiles(numRecipes int) []Recipe {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var recipes []Recipe
+	var recipes []*Recipe
 	var fileNames []string
+	var chosenFileNames []string
 	for _, f := range files {
 		if !f.IsDir() {
 			fileNames = append(fileNames, f.Name())
 		}
 	}
 	recipeIndices := GenerateUniqueRandomNumbers(numRecipes, len(fileNames))
+	for _, num := range recipeIndices {
+		chosenFileNames = append(chosenFileNames, fileNames[num])
+	}
+	for _, fileName := range chosenFileNames {
+		recipe, err := ReadRecipeFromJSONFile(home + "/.cookitup/storage/" + fileName)
+		if err != nil {
+			fmt.Printf("Error when reading file %s\n", fileName)
+			continue
+		}
+		recipes = append(recipes, recipe)
+	}
 
-	// for _, f := range chosenFiles {
-	// 	var recipe Recipe
-	// 	fmt.Println(f.Name())
-	// 	jsonFile, err := os.Open(home + "/.cookitup/storage/" + f.Name())
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// 	defer jsonFile.Close()
-	// 	byteValue, err := ioutil.ReadAll(jsonFile)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// 	json.Unmarshal(byteValue, &recipe)
-	// 	recipes = append(recipes, recipe)
-	// }
 	return recipes
 }
 
@@ -67,7 +64,7 @@ var generateCmd = &cobra.Command{
 	Short: "Generate your mealplan - default is 5 meals. Recieve a text at your specified number",
 	Long:  `Generate your mealplan. Default to five meals.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		getRecipesFromFiles()
+		getRecipesFromFiles(5)
 		fmt.Println("generate called")
 
 	},
